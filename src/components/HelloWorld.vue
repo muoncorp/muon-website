@@ -1,15 +1,16 @@
 <template>
   <v-container>
-    Hello world
+    <img
+      alt="MUON logo"
+      src="../assets/under-construction.png"
+    >
   </v-container>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import { Component, Vue } from 'vue-property-decorator'
 
-  export default Vue.extend({
-    data: () => ({
-      //
-    }),
-  })
+  @Component
+  export default class HelloWorld extends Vue {
+  }
 </script>
