@@ -8,13 +8,13 @@ use actix_files as fs;
 use actix_session::{CookieSession};
 use actix_web::http::header;
 use actix_web::{
-    guard, middleware, web, App, HttpResponse, HttpServer, Result,
+    guard, middleware, web, App, HttpResponse, HttpRequest, HttpServer, Result,
 };
 
 /// favicon handler
 #[get("/favicon")]
 async fn favicon() -> Result<fs::NamedFile> {
-    Ok(fs::NamedFile::open("static/favicon.ico")?)
+    Ok(fs::NamedFile::open("../frontend/dist/favicon.ico")?)
 }
 
 async fn vue_index() -> Result<fs::NamedFile> {
@@ -41,6 +41,9 @@ async fn main() -> io::Result<()> {
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
             .wrap(middleware::Logger::default())
             .service(favicon)
+            .service(fs::Files::new("/css", "../frontend/dist/css"))
+            .service(fs::Files::new("/img", "../frontend/dist/img"))
+            .service(fs::Files::new("/js", "../frontend/dist/js"))
             .default_service(
                 web::resource("")
                     .route(web::get().to(vue_index))
