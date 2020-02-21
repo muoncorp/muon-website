@@ -20,6 +20,7 @@
     mounted () {
       this.routeUpdated()
     }
+
     @Watch('$route')
     routeUpdated () {
       if (this.$route.hash) {

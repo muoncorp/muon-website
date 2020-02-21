@@ -48,12 +48,14 @@
     mounted () {
       this.routeUpdated()
     }
+
     @Watch('$route')
     routeUpdated () {
       if (this.$route.hash) {
         this.$vuetify.goTo(this.$route.hash)
       }
     }
+
     onScroll (e: any) {
       if (typeof window === 'undefined') {
         return
@@ -61,6 +63,7 @@
       const top = window.pageYOffset || e.target.scrollTop || 0
       this.fab = top > 20
     }
+
     toTop () {
       this.$vuetify.goTo(0)
     }

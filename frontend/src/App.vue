@@ -8,13 +8,13 @@
       color="primary"
     >
       <v-toolbar-title class="headline fill-height">
-          <!-- <v-img
-            alt="MUON logo"
-            src="./assets/muon-logo.png"
-            width="88.88px"
-            height="40.53px"
-            class="mt-1"
-          /> -->
+        <!-- <v-img
+          alt="MUON logo"
+          src="./assets/muon-logo.png"
+          width="88.88px"
+          height="40.53px"
+          class="mt-1"
+        /> -->
       </v-toolbar-title>
       <v-spacer />
       <template v-slot:img>
@@ -51,18 +51,31 @@
       absolute
     >
       <v-row
-        class="d-flex flex-column justify-end"
+        class="d-flex flex-column justify-end subtitle-2"
       >
         <div>
           뮤온(주) | TEL: 02)2635-6789
         </div>
-        <div>
-          서울시 영등포구 양평로21가길 19, 선유도우림라이온스밸리 B동 509호
+        <div
+          class="d-flex flex-row flex-wrap"
+        >
+          <div>
+            서울시 영등포구 양평로21가길 19,
+          </div>
+          <div>
+            선유도우림라이온스밸리 B동 509호
+          </div>
         </div>
-      </v-row>
-      <v-row justify="center">
-        &copy; Copyright {{ new Date().getFullYear() }}, MUON Corp. All Rights
-        Reserved.
+        <div
+          class="d-flex flex-row flex-wrap"
+        >
+          <div>
+            &copy; Copyright {{ new Date().getFullYear() }}, MUON Corp.
+          </div>
+          <div>
+            All Rights Reserved.
+          </div>
+        </div>
       </v-row>
     </v-footer>
   </v-app>
