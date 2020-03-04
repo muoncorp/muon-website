@@ -8,26 +8,28 @@ use actix_files as fs;
 use actix_session::{CookieSession};
 use actix_web::http::header;
 use actix_web::{
-    guard, middleware, web, App, HttpResponse, HttpRequest, HttpServer, Result,
+    guard, middleware, web, App, HttpResponse, HttpServer, Result,
 };
+use listenfd::ListenFd;
 
 /// favicon handler
 #[get("/favicon")]
 async fn favicon() -> Result<fs::NamedFile> {
-    Ok(fs::NamedFile::open("../frontend/dist/favicon.ico")?)
+    Ok(fs::NamedFile::open("./frontend/dist/favicon.ico")?)
 }
 
 async fn vue_index() -> Result<fs::NamedFile> {
     println!("Redirected to Vue SPA");
-    Ok(fs::NamedFile::open("../frontend/dist/index.html")?)
+    Ok(fs::NamedFile::open("./frontend/dist/index.html")?)
 }
 
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     env_logger::init();
-
-    HttpServer::new(|| {
+    
+    let mut listenfd = ListenFd::from_env();
+    let mut server = HttpServer::new(|| {
         App::new()
             .wrap(
                 Cors::new()
@@ -41,9 +43,9 @@ async fn main() -> io::Result<()> {
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
             .wrap(middleware::Logger::default())
             .service(favicon)
-            .service(fs::Files::new("/css", "../frontend/dist/css"))
-            .service(fs::Files::new("/img", "../frontend/dist/img"))
-            .service(fs::Files::new("/js", "../frontend/dist/js"))
+            .service(fs::Files::new("/css", "./frontend/dist/css"))
+            .service(fs::Files::new("/img", "./frontend/dist/img"))
+            .service(fs::Files::new("/js", "./frontend/dist/js"))
             .default_service(
                 web::resource("")
                     .route(web::get().to(vue_index))
@@ -53,8 +55,13 @@ async fn main() -> io::Result<()> {
                             .to(|| HttpResponse::MethodNotAllowed())
                     )
             )
-    })
-    .bind("127.0.0.1:8080")?
-    .run()
-    .await
+    });
+
+    server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
+        server.listen(l)?
+    } else {
+        server.bind("127.0.0.1:3000")?
+    };
+
+    server.run().await
 }
