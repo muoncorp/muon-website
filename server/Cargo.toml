@@ -1,5 +1,5 @@
 [package]
-name = "muon-website-backend"
+name = "muon-website-server"
 version = "1.0.0"
 authors = ["Mewlips <mewlips@muon.co>"]
 edition = "2018"
